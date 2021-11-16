@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import * as fromRoot from '../app.reducer'
 import { Store } from '@ngrx/store';
-import * as UI from '../shared/ui.action';
+import * as UI from '../shared/ui.actions';
 @Injectable()
 export class TrainingService {
     exerciseChanged = new Subject<Exercise>();

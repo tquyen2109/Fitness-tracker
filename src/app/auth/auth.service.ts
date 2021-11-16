@@ -7,10 +7,11 @@ import { Router } from '@angular/router';
 import {AngularFireAuth } from 'angularfire2/auth'
 import * as fromRoot from '../app.reducer'
 import { Store } from '@ngrx/store';
-import * as UI from '../shared/ui.action';
+import * as UI from '../shared/ui.actions';
+import * as Auth from '../auth/auth.actions';
+
 @Injectable()
 export class AuthService {
-    private isAuthenticated = false;
     authChange = new Subject<boolean>();
     constructor(private router: Router,
         private afAuth: AngularFireAuth,
@@ -23,13 +24,12 @@ export class AuthService {
     initAuthListener() {
         this.afAuth.authState.subscribe(user => {
             if(user) {
-                this.isAuthenticated = true;
-                this.authChange.next(true);
+                this.store.dispatch(new Auth.SetAuthenticated());
             }
             else {
                 this.trainingService.cancelSunbscription();
-                this.authChange.next(false);
-                this.isAuthenticated = true;
+                this.store.dispatch(new Auth.SetUnauthenticated());
+
             }
         });
     }
@@ -66,10 +66,5 @@ export class AuthService {
         this.afAuth.auth.signOut(); 
         this.router.navigate(['/']);    
     }
-
-    isAuth() {
-        return this.isAuthenticated;
-    }
-
 
 }
